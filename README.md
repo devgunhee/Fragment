@@ -6,7 +6,7 @@ Learn how to use Fragment
 General Fragment usage
 
 <b> step 2. </b>
-Fragment with FragmentContainer View
+Fragment with FragmentContainerView
 
 <b> step 3. </b>
 Migrate to Jetpack Navigation
