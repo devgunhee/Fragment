@@ -3,10 +3,10 @@
 learn how to use Fragment
 
 <b> step 1. </b>
-</n>General Fragment usage
+General Fragment usage
 
-**step 2. **
+<b> step 2. </b>
 Fragment with FragmentContainer View
 
-**step 3. **
+<b> step 3. </b>
 Migrate to Jetpack Navigation
