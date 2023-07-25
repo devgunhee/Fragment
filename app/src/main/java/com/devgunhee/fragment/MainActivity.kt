@@ -7,9 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.databinding.ActivityMainBinding
 
-class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    enum class Menu(val id: Int) {
+        Home(R.id.home),
+        Dual(R.id.dual),
+        Flow(R.id.flow),
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,24 +27,25 @@ class MainActivity() : AppCompatActivity() {
                 if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
                     finish()
                 else
-                    binding.bottomNavigation.selectedItemId = R.id.home
+                    binding.bottomNavigation.selectedItemId = Menu.Home.id
             }
         })
 
         replaceFragment(HomeFragment())
+
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.home -> {
+                Menu.Home.id -> {
                     replaceFragment(HomeFragment())
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.dual -> {
+                Menu.Dual.id -> {
                     replaceFragment(DualFragment())
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.flow -> {
+                Menu.Flow.id -> {
                     replaceFragment(FlowFragment())
                     return@setOnItemSelectedListener true
                 }
