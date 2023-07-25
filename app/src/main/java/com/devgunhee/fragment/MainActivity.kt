@@ -18,30 +18,31 @@ class MainActivity() : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                /**
-                 * TODO
-                 *  if Home Fragment finish
-                 *  else replace Home Fragment
-                  */
+                if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
+                    finish()
+                else
+                    binding.bottomNavigation.selectedItemId = R.id.home
             }
         })
 
         replaceFragment(HomeFragment())
-
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
                     replaceFragment(HomeFragment())
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.dual -> {
                     replaceFragment(DualFragment())
                     return@setOnItemSelectedListener true
                 }
+
                 R.id.flow -> {
                     replaceFragment(FlowFragment())
                     return@setOnItemSelectedListener true
                 }
+
                 else -> {
                     Log.e("", "nothing selected")
                     return@setOnItemSelectedListener false
