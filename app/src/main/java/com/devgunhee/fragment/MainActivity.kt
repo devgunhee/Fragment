@@ -3,15 +3,19 @@ package com.devgunhee.fragment
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.databinding.ActivityMainBinding
+import com.devgunhee.fragment.dual.DualFragment
+import com.devgunhee.fragment.flow.FlowFragment
+import com.devgunhee.fragment.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    enum class Menu(val id: Int) {
+    enum class Menu(@IdRes val id: Int) {
         Home(R.id.home),
         Dual(R.id.dual),
         Flow(R.id.flow),
@@ -31,8 +35,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        replaceFragment(HomeFragment())
-
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 Menu.Home.id -> {
@@ -51,10 +53,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    Log.e("", "nothing selected")
+                    Log.e(TAG, "nothing selected")
                     return@setOnItemSelectedListener false
                 }
             }
+        }
+        binding.bottomNavigation.selectedItemId = Menu.Home.id
+    }
+
+    fun printBackStack() {
+        for (index in 0 until supportFragmentManager.backStackEntryCount) {
+            Log.e(TAG, "${supportFragmentManager.getBackStackEntryAt(index)}")
         }
     }
 
@@ -62,5 +71,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)
             .commit()
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }

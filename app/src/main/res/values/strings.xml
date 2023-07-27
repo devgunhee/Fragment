@@ -3,4 +3,11 @@
     <string name="home">home</string>
     <string name="dual">dual</string>
     <string name="flow">flow</string>
+    <string name="flow_start">start</string>
+    <string name="flow_first">first</string>
+    <string name="flow_second">second</string>
+    <string name="flow_third">third</string>
+    <string name="flow_finish">finish</string>
+    <string name="move_to_start">처음으로</string>
+    <string name="next">다음</string>
 </resources>
