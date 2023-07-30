@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
                 if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
                     finish()
                 else
-                    binding.bottomNavigation.selectedItemId = Menu.Home.id
+                    moveToHome()
             }
         })
 
@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        moveToHome()
+    }
+
+    fun moveToHome() {
         binding.bottomNavigation.selectedItemId = Menu.Home.id
     }
 

@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.devgunhee.fragment.databinding.FragmentFlowFinishBinding
 
 class FlowFinishFragment : Fragment() {
@@ -20,8 +22,18 @@ class FlowFinishFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowFinishBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                popAll()
+            }
+        })
+
+        binding.moveToStart.setOnClickListener { popAll() }
         return binding.root
     }
+
+    private fun popAll() = parentFragmentManager.popBackStack(FlowFirstFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView")
@@ -30,6 +42,6 @@ class FlowFinishFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "FlowFinishFragment"
+        const val TAG = "FlowFinishFragment"
     }
 }

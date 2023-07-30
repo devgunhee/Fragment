@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import com.devgunhee.fragment.MainActivity
 import com.devgunhee.fragment.databinding.FragmentFlowBinding
 
 /**
@@ -28,6 +30,17 @@ class FlowFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowBinding.inflate(inflater, container, false)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (childFragmentManager.backStackEntryCount == 0)
+                    (activity as MainActivity).moveToHome()
+                else
+                    childFragmentManager.popBackStack()
+            }
+        })
+
+        childFragmentManager.beginTransaction().replace(binding.flowFragmentContainer.id, FlowStartFragment()).commit()
         return binding.root
     }
 
