@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.MainActivity
+import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowBinding
 
 /**
@@ -18,7 +20,7 @@ import com.devgunhee.fragment.databinding.FragmentFlowBinding
  *  하지만 마지막 Finish Fragment의 경우는 backPress 되었을 떄 첫 화면인 Start Fragment로 전환 되어야 함.
  */
 
-class FlowFragment : Fragment() {
+class FlowFragment(@StringRes private val resId: Int) : Fragment() {
 
     private var _binding: FragmentFlowBinding? = null
     private val binding get() = _binding!!
@@ -40,8 +42,16 @@ class FlowFragment : Fragment() {
             }
         })
 
-        childFragmentManager.beginTransaction().replace(binding.flowFragmentContainer.id, FlowStartFragment()).commit()
+        childFragmentManager.beginTransaction()
+            .replace(binding.flowFragmentContainer.id, FlowStartFragment(R.string.flow_start))
+            .commit()
+
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = getString(resId)
     }
 
     override fun onDestroyView() {

@@ -5,11 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowThirdBinding
 
-class FlowThirdFragment : Fragment() {
+class FlowThirdFragment(@StringRes private val resId: Int) : Fragment() {
 
     private var _binding: FragmentFlowThirdBinding? = null
     private val binding get() = _binding!!
@@ -23,10 +24,18 @@ class FlowThirdFragment : Fragment() {
         _binding = FragmentFlowThirdBinding.inflate(inflater, container, false)
 
         binding.moveToFinish.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.flow_fragment_container, FlowFinishFragment()).addToBackStack(FlowFinishFragment.TAG).commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flow_fragment_container, FlowFinishFragment(R.string.flow_finish))
+                .addToBackStack(FlowFinishFragment.TAG)
+                .commit()
         }
         
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = getString(resId)
     }
 
     override fun onDestroyView() {

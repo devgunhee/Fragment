@@ -5,10 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.databinding.FragmentDualBinding
 
-class DualFragment : Fragment() {
+class DualFragment(@StringRes private val resId: Int) : Fragment() {
 
     private var _binding: FragmentDualBinding? = null
     private val binding get() = _binding!!
@@ -21,6 +22,11 @@ class DualFragment : Fragment() {
         Log.d(TAG, "onCreateView")
         _binding = FragmentDualBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = getString(resId)
     }
 
     override fun onDestroyView() {
