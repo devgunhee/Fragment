@@ -5,11 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowFirstBinding
 
-class FlowFirstFragment : Fragment() {
+class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
 
     private var _binding: FragmentFlowFirstBinding? = null
     private val binding get() = _binding!!
@@ -23,10 +24,18 @@ class FlowFirstFragment : Fragment() {
         _binding = FragmentFlowFirstBinding.inflate(inflater, container, false)
 
         binding.moveToSecond.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.flow_fragment_container, FlowSecondFragment()).addToBackStack(FlowSecondFragment.TAG).commit()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.flow_fragment_container, FlowSecondFragment(R.string.flow_second))
+                .addToBackStack(FlowSecondFragment.TAG)
+                .commit()
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.name.text = getString(resId)
     }
 
     override fun onDestroyView() {

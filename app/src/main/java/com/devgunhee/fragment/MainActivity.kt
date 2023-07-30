@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -38,17 +39,17 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 Menu.Home.id -> {
-                    replaceFragment(HomeFragment())
+                    replaceFragment(HomeFragment(R.string.home))
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.Dual.id -> {
-                    replaceFragment(DualFragment())
+                    replaceFragment(DualFragment(R.string.dual))
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.Flow.id -> {
-                    replaceFragment(FlowFragment())
+                    replaceFragment(FlowFragment(R.string.flow))
                     return@setOnItemSelectedListener true
                 }
 
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)
             .commit()
