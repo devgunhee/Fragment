@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="bg_flow_start">#FFFFFF</color>
+    <color name="bg_flow_first">#E4F7BA</color>
+    <color name="bg_flow_second">#CEF279</color>
+    <color name="bg_flow_third">#BCE55C</color>
+    <color name="bg_flow_finish">#9FC93C</color>
 </resources>

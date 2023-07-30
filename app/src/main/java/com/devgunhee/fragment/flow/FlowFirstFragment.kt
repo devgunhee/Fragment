@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowFirstBinding
 
 class FlowFirstFragment : Fragment() {
@@ -20,6 +21,11 @@ class FlowFirstFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowFirstBinding.inflate(inflater, container, false)
+
+        binding.moveToSecond.setOnClickListener {
+            parentFragmentManager.beginTransaction().replace(R.id.flow_fragment_container, FlowSecondFragment()).addToBackStack(FlowSecondFragment.TAG).commit()
+        }
+
         return binding.root
     }
 
@@ -30,6 +36,6 @@ class FlowFirstFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "FlowFirstFragment"
+        const val TAG = "FlowFirstFragment"
     }
 }
