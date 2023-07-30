@@ -21,9 +21,11 @@ class FlowThirdFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowThirdBinding.inflate(inflater, container, false)
+
         binding.moveToFinish.setOnClickListener {
             parentFragmentManager.beginTransaction().replace(R.id.flow_fragment_container, FlowFinishFragment()).addToBackStack(FlowFinishFragment.TAG).commit()
         }
+        
         return binding.root
     }
 

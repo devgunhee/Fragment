@@ -21,9 +21,11 @@ class FlowStartFragment : Fragment() {
     ): View {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowStartBinding.inflate(inflater, container, false)
+
         binding.moveToFirst.setOnClickListener {
             parentFragmentManager.beginTransaction().replace(R.id.flow_fragment_container, FlowFirstFragment()).addToBackStack(FlowFirstFragment.TAG).commit()
         }
+        
         return binding.root
     }
 
