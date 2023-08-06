@@ -14,16 +14,25 @@ import com.devgunhee.fragment.home.HomeFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var currentFragmentId: String? = null
 
     enum class Menu(@IdRes val id: Int) {
-        Home(R.id.home),
-        Dual(R.id.dual),
-        Flow(R.id.flow),
+        HomeFragment(R.id.home),
+        DualFragment(R.id.dual),
+        FlowFragment(R.id.flow),
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        supportFragmentManager.findFragmentById(binding.fragmentContainer.id)?.let {
+            outState.putString(CURRENT_FRAGMENT, it.javaClass.simpleName)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
+        currentFragmentId = savedInstanceState?.getString(CURRENT_FRAGMENT)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -38,17 +47,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
-                Menu.Home.id -> {
+                Menu.HomeFragment.id -> {
                     replaceFragment(HomeFragment(R.string.home))
                     return@setOnItemSelectedListener true
                 }
 
-                Menu.Dual.id -> {
+                Menu.DualFragment.id -> {
                     replaceFragment(DualFragment(R.string.dual))
                     return@setOnItemSelectedListener true
                 }
 
-                Menu.Flow.id -> {
+                Menu.FlowFragment.id -> {
                     replaceFragment(FlowFragment(R.string.flow))
                     return@setOnItemSelectedListener true
                 }
@@ -59,17 +68,22 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        moveToHome()
+
+        moveToCurrentFragment()
     }
 
     fun moveToHome() {
-        binding.bottomNavigation.selectedItemId = Menu.Home.id
+        binding.bottomNavigation.selectedItemId = Menu.HomeFragment.id
     }
 
     fun printBackStack() {
         for (index in 0 until supportFragmentManager.backStackEntryCount) {
             Log.e(TAG, "${supportFragmentManager.getBackStackEntryAt(index)}")
         }
+    }
+
+    private fun moveToCurrentFragment() {
+        binding.bottomNavigation.selectedItemId = currentFragmentId?.let { Menu.valueOf(it).id } ?: Menu.HomeFragment.id
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -80,5 +94,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val CURRENT_FRAGMENT = "CURRENT_FRAGMENT"
     }
 }
