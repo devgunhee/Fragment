@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowStartBinding
 
@@ -26,7 +27,7 @@ class FlowStartFragment(@StringRes private val resId: Int) : Fragment() {
         binding.moveToFirst.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flow_fragment_container, FlowFirstFragment(R.string.flow_first))
-                .addToBackStack(FlowFirstFragment.TAG)
+                .addToBackStack(Flow.FlowFirstFragment.name)
                 .commit()
         }
         
@@ -45,6 +46,6 @@ class FlowStartFragment(@StringRes private val resId: Int) : Fragment() {
     }
 
     companion object {
-        const val TAG = "FlowStartFragment"
+        private const val TAG = "FlowStartFragment"
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowFirstBinding
 
@@ -26,7 +27,7 @@ class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
         binding.moveToSecond.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.flow_fragment_container, FlowSecondFragment(R.string.flow_second))
-                .addToBackStack(FlowSecondFragment.TAG)
+                .addToBackStack(Flow.FlowSecondFragment.name)
                 .commit()
         }
 
@@ -45,6 +46,6 @@ class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
     }
 
     companion object {
-        const val TAG = "FlowFirstFragment"
+        private const val TAG = "FlowFirstFragment"
     }
 }
