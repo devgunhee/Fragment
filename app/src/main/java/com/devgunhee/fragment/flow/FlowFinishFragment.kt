@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.databinding.FragmentFlowFinishBinding
 
 class FlowFinishFragment(@StringRes private val resId: Int) : Fragment() {
@@ -39,7 +40,7 @@ class FlowFinishFragment(@StringRes private val resId: Int) : Fragment() {
         binding.name.text = getString(resId)
     }
 
-    private fun popAll() = parentFragmentManager.popBackStack(FlowFirstFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    private fun popAll() = parentFragmentManager.popBackStack(Flow.FlowFirstFragment.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView")
@@ -48,6 +49,6 @@ class FlowFinishFragment(@StringRes private val resId: Int) : Fragment() {
     }
 
     companion object {
-        const val TAG = "FlowFinishFragment"
+        private const val TAG = "FlowFinishFragment"
     }
 }

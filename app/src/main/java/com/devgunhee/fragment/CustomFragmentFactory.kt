@@ -1,6 +1,5 @@
 package com.devgunhee.fragment
 
-import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentFactory
 import com.devgunhee.fragment.dual.DualFragment
 import com.devgunhee.fragment.flow.FlowFinishFragment
@@ -10,7 +9,6 @@ import com.devgunhee.fragment.flow.FlowSecondFragment
 import com.devgunhee.fragment.flow.FlowStartFragment
 import com.devgunhee.fragment.flow.FlowThirdFragment
 import com.devgunhee.fragment.home.HomeFragment
-import java.lang.IllegalArgumentException
 
 class CustomFragmentFactory : FragmentFactory() {
     override fun instantiate(classLoader: ClassLoader, className: String) =
@@ -27,19 +25,26 @@ class CustomFragmentFactory : FragmentFactory() {
         }
 
     /**
-     * get Fragment by StringRes [id]
+     * get Fragment by Menu
      *
-     * @throws IllegalArgumentException
+     * @sample [com.devgunhee.fragment.Menu]
      */
-    fun getFragment(@StringRes id: Int) = when (id) {
-        R.string.home -> { HomeFragment(id) }
-        R.string.dual -> { DualFragment(id) }
-        R.string.flow -> { FlowFragment(id) }
-        R.string.flow_start -> { FlowStartFragment(id) }
-        R.string.flow_first -> { FlowFirstFragment(id) }
-        R.string.flow_second -> { FlowSecondFragment(id) }
-        R.string.flow_third -> { FlowThirdFragment(id) }
-        R.string.flow_finish -> { FlowFinishFragment(id) }
-        else -> { throw IllegalArgumentException() }
+    fun getFragment(menu: Menu) = when (menu) {
+        Menu.HomeFragment -> { HomeFragment(menu.titleId) }
+        Menu.DualFragment -> { DualFragment(menu.titleId) }
+        Menu.FlowFragment -> { FlowFragment(menu.titleId) }
+    }
+
+    /**
+     * get Fragment by Flow
+     *
+     * @sample [com.devgunhee.fragment.Flow]
+     */
+    fun getFragment(flow: Flow) = when (flow) {
+        Flow.FlowStartFragment -> { FlowStartFragment(flow.titleId) }
+        Flow.FlowFirstFragment -> { FlowFirstFragment(flow.titleId) }
+        Flow.FlowSecondFragment -> { FlowSecondFragment(flow.titleId) }
+        Flow.FlowThirdFragment -> { FlowThirdFragment(flow.titleId) }
+        Flow.FlowFinishFragment -> { FlowFinishFragment(flow.titleId) }
     }
 }

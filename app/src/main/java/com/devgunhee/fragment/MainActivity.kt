@@ -3,7 +3,6 @@ package com.devgunhee.fragment
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.devgunhee.fragment.databinding.ActivityMainBinding
@@ -14,25 +13,17 @@ import com.devgunhee.fragment.home.HomeFragment
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var currentFragmentId: String? = null
-
-    enum class Menu(@IdRes val id: Int) {
-        HomeFragment(R.id.home),
-        DualFragment(R.id.dual),
-        FlowFragment(R.id.flow),
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         supportFragmentManager.findFragmentById(binding.fragmentContainer.id)?.let {
-            outState.putString(CURRENT_FRAGMENT, it.javaClass.simpleName)
+            outState.putString(CURRENT_FRAGMENT_CLASS_NAME, it.javaClass.simpleName)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
-        currentFragmentId = savedInstanceState?.getString(CURRENT_FRAGMENT)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -47,17 +38,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
-                Menu.HomeFragment.id -> {
+                Menu.HomeFragment.itemId -> {
                     replaceFragment(HomeFragment(R.string.home))
                     return@setOnItemSelectedListener true
                 }
 
-                Menu.DualFragment.id -> {
+                Menu.DualFragment.itemId -> {
                     replaceFragment(DualFragment(R.string.dual))
                     return@setOnItemSelectedListener true
                 }
 
-                Menu.FlowFragment.id -> {
+                Menu.FlowFragment.itemId -> {
                     replaceFragment(FlowFragment(R.string.flow))
                     return@setOnItemSelectedListener true
                 }
@@ -69,11 +60,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        moveToCurrentFragment()
+        restoreCurrentFragment(savedInstanceState?.getString(CURRENT_FRAGMENT_CLASS_NAME))
     }
 
     fun moveToHome() {
-        binding.bottomNavigation.selectedItemId = Menu.HomeFragment.id
+        binding.bottomNavigation.selectedItemId = Menu.HomeFragment.itemId
     }
 
     fun printBackStack() {
@@ -82,8 +73,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun moveToCurrentFragment() {
-        binding.bottomNavigation.selectedItemId = currentFragmentId?.let { Menu.valueOf(it).id } ?: Menu.HomeFragment.id
+    private fun restoreCurrentFragment(fragmentClassName: String?) {
+        binding.bottomNavigation.selectedItemId = if (fragmentClassName == null) Menu.HomeFragment.itemId else Menu.valueOf(fragmentClassName).itemId
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -94,6 +85,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val CURRENT_FRAGMENT = "CURRENT_FRAGMENT"
+        private const val CURRENT_FRAGMENT_CLASS_NAME = "CURRENT_FRAGMENT_CLASS_NAME"
     }
 }
