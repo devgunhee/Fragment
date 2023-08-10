@@ -25,7 +25,9 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
 
     private var _binding: FragmentFlowBinding? = null
     private val binding get() = _binding!!
-    private val customFragmentFactory = childFragmentManager.fragmentFactory as CustomFragmentFactory
+    private val customFragmentFactory : CustomFragmentFactory by lazy {
+        childFragmentManager.fragmentFactory as CustomFragmentFactory
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
