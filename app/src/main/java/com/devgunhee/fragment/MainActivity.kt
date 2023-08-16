@@ -68,12 +68,6 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.selectedItemId = Menu.HomeFragment.itemId
     }
 
-    fun printBackStack() {
-        for (index in 0 until supportFragmentManager.backStackEntryCount) {
-            Log.e(TAG, "${supportFragmentManager.getBackStackEntryAt(index)}")
-        }
-    }
-
     private fun restoreCurrentFragment(fragmentClassName: String?) {
         binding.bottomNavigation.selectedItemId = if (fragmentClassName == null) Menu.HomeFragment.itemId else Menu.valueOf(fragmentClassName).itemId
     }
