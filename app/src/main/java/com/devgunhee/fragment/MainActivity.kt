@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.bottomNavigation.setOnItemSelectedListener {
+            Log.e(TAG, "Bottom Navigation Selected >> $it")
             when (it.itemId) {
                 Menu.HomeFragment.itemId -> {
                     replaceFragment(HomeFragment(R.string.home))
