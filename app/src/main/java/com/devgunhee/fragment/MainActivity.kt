@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun restoreCurrentFragment(fragmentClassName: String?) {
+        Log.e(TAG, "restored Fragment >> $fragmentClassName")
         binding.bottomNavigation.selectedItemId = if (fragmentClassName == null) Menu.HomeFragment.itemId else Menu.valueOf(fragmentClassName).itemId
     }
 

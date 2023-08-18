@@ -62,6 +62,7 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
     }
 
     private fun restoreCurrentFragments(fragmentClassNames: List<String>?) {
+        Log.e(TAG, "restored Fragments >> $fragmentClassNames")
         if (fragmentClassNames.isNullOrEmpty()) {
             replaceFragment(Flow.FlowStartFragment)
         } else {
