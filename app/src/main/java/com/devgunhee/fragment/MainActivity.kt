@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
+        Log.e(TAG, "replaceFragment >> $fragment")
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)
             .commit()
