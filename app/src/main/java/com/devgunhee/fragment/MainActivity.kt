@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        Log.e(TAG, "onSaveInstanceState >> $outState")
         supportFragmentManager.findFragmentById(binding.fragmentContainer.id)?.let {
             outState.putString(CURRENT_FRAGMENT_CLASS_NAME, it.javaClass.simpleName)
         }
