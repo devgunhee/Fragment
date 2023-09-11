@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
+        Log.e(TAG, "savedInstanceState >> $savedInstanceState")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
