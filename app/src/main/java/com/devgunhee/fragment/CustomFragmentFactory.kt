@@ -14,7 +14,7 @@ import com.devgunhee.fragment.home.HomeFragment
 
 class CustomFragmentFactory : FragmentFactory() {
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-        Log.d(TAG, "className >> $className")
+        Log.d(TAG, "className >> $className, classLoader >> $classLoader")
         return when (loadFragmentClass(classLoader, className)) {
             HomeFragment::class.java -> {
                 HomeFragment(R.string.home)
