@@ -25,6 +25,7 @@ class HomeFragment(@StringRes private val resId: Int) : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         binding.name.text = getString(resId)
     }
