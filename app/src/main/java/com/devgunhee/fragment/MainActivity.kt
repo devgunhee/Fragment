@@ -14,14 +14,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.e(TAG, "onSaveInstanceState >> $outState")
-        supportFragmentManager.findFragmentById(binding.fragmentContainer.id)?.let {
-            outState.putString(CURRENT_FRAGMENT_CLASS_NAME, it.javaClass.simpleName)
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
@@ -63,16 +55,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        restoreCurrentFragment(savedInstanceState?.getString(CURRENT_FRAGMENT_CLASS_NAME))
+        if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null)
+            moveToHome()
     }
 
     fun moveToHome() {
         binding.bottomNavigation.selectedItemId = Menu.HomeFragment.itemId
-    }
-
-    private fun restoreCurrentFragment(fragmentClassName: String?) {
-        Log.e(TAG, "restored Fragment >> $fragmentClassName")
-        binding.bottomNavigation.selectedItemId = if (fragmentClassName == null) Menu.HomeFragment.itemId else Menu.valueOf(fragmentClassName).itemId
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -84,6 +72,5 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val CURRENT_FRAGMENT_CLASS_NAME = "CURRENT_FRAGMENT_CLASS_NAME"
     }
 }
