@@ -31,10 +31,10 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val backStackList = arrayListOf<String>()
-        for (index in 0 until childFragmentManager.backStackEntryCount)
-            childFragmentManager.getBackStackEntryAt(index).name?.let { backStackList.add(it) }
-        outState.putStringArrayList(CURRENT_FLOW_FRAGMENTS, backStackList)
+//        val backStackList = arrayListOf<String>()
+//        for (index in 0 until childFragmentManager.backStackEntryCount)
+//            childFragmentManager.getBackStackEntryAt(index).name?.let { backStackList.add(it) }
+//        outState.putStringArrayList(CURRENT_FLOW_FRAGMENTS, backStackList)
     }
 
     override fun onCreateView(
@@ -45,10 +45,12 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowBinding.inflate(inflater, container, false)
 
+
         Log.e(TAG, "${savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS)}")
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.e(TAG, "FlowFragment >> handleOnBackPressed")
                 if (childFragmentManager.backStackEntryCount == 0)
                     (activity as MainActivity).moveToHome()
                 else
@@ -56,7 +58,11 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
             }
         })
 
-        restoreCurrentFragments(savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS))
+        binding.button.setOnClickListener {
+            replaceFragment(Flow.FlowStartFragment)
+        }
+
+//        restoreCurrentFragments(savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS))
 
         return binding.root
     }

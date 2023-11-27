@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
+                Log.e(TAG, "MainActivity >> handleOnBackPressed")
                 if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
                     finish()
                 else

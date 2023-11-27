@@ -25,10 +25,21 @@ class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
         _binding = FragmentFlowFirstBinding.inflate(inflater, container, false)
 
         binding.moveToSecond.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.flow_fragment_container, FlowSecondFragment(R.string.flow_second))
-                .addToBackStack(Flow.FlowSecondFragment.name)
-                .commit()
+            Log.d(TAG, "[BackStack] ${parentFragmentManager.fragments}")
+            Log.d(TAG, "[BackStack] ${parentFragmentManager.fragments.size}")
+            Log.d(TAG, "[BackStack] ${parentFragmentManager.backStackEntryCount}")
+
+            //TODO Configuration Change에서 Fragment BackStack어떻게 되는지 찾아보기
+
+            for (index in 0 until parentFragmentManager.backStackEntryCount)
+                parentFragmentManager.getBackStackEntryAt(index).name?.let {
+                    Log.d(TAG, "[BackStack] $it")
+                }
+
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.flow_fragment_container, FlowSecondFragment(R.string.flow_second))
+//                .addToBackStack(Flow.FlowSecondFragment.name)
+//                .commit()
         }
 
         return binding.root
