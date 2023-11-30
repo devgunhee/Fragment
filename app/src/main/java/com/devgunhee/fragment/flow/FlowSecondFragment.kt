@@ -11,7 +11,7 @@ import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowSecondBinding
 
-class FlowSecondFragment(@StringRes private val resId: Int) : Fragment() {
+class FlowSecondFragment : Fragment() {
 
     private var _binding: FragmentFlowSecondBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +26,7 @@ class FlowSecondFragment(@StringRes private val resId: Int) : Fragment() {
 
         binding.moveToThird.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.flow_fragment_container, FlowThirdFragment(R.string.flow_third))
+                .replace(R.id.flow_fragment_container, FlowThirdFragment())
                 .addToBackStack(Flow.FlowThirdFragment.name)
                 .commit()
         }
@@ -36,7 +36,7 @@ class FlowSecondFragment(@StringRes private val resId: Int) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.flow_second)
     }
 
     override fun onDestroyView() {

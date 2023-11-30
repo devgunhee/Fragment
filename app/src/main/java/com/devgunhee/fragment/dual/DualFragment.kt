@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentDualBinding
 
-class DualFragment(@StringRes private val resId: Int) : Fragment() {
+class DualFragment : Fragment() {
 
     private var _binding: FragmentDualBinding? = null
     private val binding get() = _binding!!
@@ -27,7 +28,7 @@ class DualFragment(@StringRes private val resId: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.dual)
     }
 
     override fun onDestroyView() {

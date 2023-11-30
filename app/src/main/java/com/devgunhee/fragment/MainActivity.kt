@@ -15,11 +15,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        supportFragmentManager.fragmentFactory = CustomFragmentFactory()
+//        supportFragmentManager.fragmentFactory = CustomFragmentFactory()
         super.onCreate(savedInstanceState)
         Log.e(TAG, "savedInstanceState >> $savedInstanceState")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.menu.setOnClickListener {
+            Log.e(TAG, "MainActivity >> fragments ${supportFragmentManager.fragments}")
+            for(i in 0 until supportFragmentManager.backStackEntryCount)
+                Log.e(TAG, "MainActivity >> $i supportFragmentManager Backstack ${supportFragmentManager.getBackStackEntryAt(i)}")
+        }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -35,17 +41,17 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Bottom Navigation Selected >> $it")
             when (it.itemId) {
                 Menu.HomeFragment.itemId -> {
-                    replaceFragment(HomeFragment(R.string.home))
+                    replaceFragment(getFragment(Menu.HomeFragment))
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.DualFragment.itemId -> {
-                    replaceFragment(DualFragment(R.string.dual))
+                    replaceFragment(getFragment(Menu.DualFragment))
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.FlowFragment.itemId -> {
-                    replaceFragment(FlowFragment(R.string.flow))
+                    replaceFragment(getFragment(Menu.FlowFragment))
                     return@setOnItemSelectedListener true
                 }
 
@@ -67,8 +73,20 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         Log.e(TAG, "replaceFragment >> $fragment")
         supportFragmentManager.beginTransaction()
+            .setPrimaryNavigationFragment(fragment)
             .replace(binding.fragmentContainer.id, fragment)
             .commit()
+    }
+
+    /**
+     * get Fragment by Menu
+     *
+     * @sample [com.devgunhee.fragment.Menu]
+     */
+    fun getFragment(menu: Menu) = when (menu) {
+        Menu.HomeFragment -> { HomeFragment() }
+        Menu.DualFragment -> { DualFragment() }
+        Menu.FlowFragment -> { FlowFragment() }
     }
 
     companion object {

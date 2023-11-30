@@ -11,7 +11,7 @@ import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowThirdBinding
 
-class FlowThirdFragment(@StringRes private val resId: Int) : Fragment() {
+class FlowThirdFragment : Fragment() {
 
     private var _binding: FragmentFlowThirdBinding? = null
     private val binding get() = _binding!!
@@ -26,7 +26,7 @@ class FlowThirdFragment(@StringRes private val resId: Int) : Fragment() {
 
         binding.moveToFinish.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.flow_fragment_container, FlowFinishFragment(R.string.flow_finish))
+                .replace(R.id.flow_fragment_container, FlowFinishFragment())
                 .addToBackStack(Flow.FlowFinishFragment.name)
                 .commit()
         }
@@ -36,7 +36,7 @@ class FlowThirdFragment(@StringRes private val resId: Int) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.flow_third)
     }
 
     override fun onDestroyView() {

@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.devgunhee.fragment.Flow
+import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowFinishBinding
 
-class FlowFinishFragment(@StringRes private val resId: Int) : Fragment() {
+class FlowFinishFragment : Fragment() {
 
     private var _binding: FragmentFlowFinishBinding? = null
     private val binding get() = _binding!!
@@ -37,7 +37,7 @@ class FlowFinishFragment(@StringRes private val resId: Int) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.flow_finish)
     }
 
     private fun popAll() = parentFragmentManager.popBackStack(Flow.FlowFirstFragment.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)

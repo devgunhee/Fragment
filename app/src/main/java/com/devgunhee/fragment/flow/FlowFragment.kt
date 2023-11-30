@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import com.devgunhee.fragment.CustomFragmentFactory
 import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.MainActivity
+import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowBinding
 
 /**
@@ -21,13 +21,13 @@ import com.devgunhee.fragment.databinding.FragmentFlowBinding
  *  하지만 마지막 Finish Fragment의 경우는 backPress 되었을 떄 첫 화면인 Start Fragment로 전환 되어야 함.
  */
 
-class FlowFragment(@StringRes private val resId: Int) : Fragment() {
+class FlowFragment : Fragment() {
 
     private var _binding: FragmentFlowBinding? = null
     private val binding get() = _binding!!
-    private val customFragmentFactory : CustomFragmentFactory by lazy {
-        childFragmentManager.fragmentFactory as CustomFragmentFactory
-    }
+//    private val customFragmentFactory : CustomFragmentFactory by lazy {
+//        childFragmentManager.fragmentFactory as CustomFragmentFactory
+//    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -45,12 +45,20 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
         Log.d(TAG, "onCreateView")
         _binding = FragmentFlowBinding.inflate(inflater, container, false)
 
+        binding.flow.setOnClickListener {
+            Log.e(TAG, "FlowFragment >> fragments ${childFragmentManager.fragments}")
+            for(i in 0 until childFragmentManager.backStackEntryCount)
+                Log.e(TAG, "FlowFragment >> $i childFragmentManager Backstack ${childFragmentManager.getBackStackEntryAt(i)}")
+        }
+
 
         Log.e(TAG, "${savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS)}")
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 Log.e(TAG, "FlowFragment >> handleOnBackPressed")
+                Log.e(TAG, "FlowFragment >> fragments ${childFragmentManager.fragments}")
+                for(i in 0 until childFragmentManager.backStackEntryCount)
+                Log.e(TAG, "FlowFragment >> $i childFragmentManager Backstack ${childFragmentManager.getBackStackEntryAt(i)}")
                 if (childFragmentManager.backStackEntryCount == 0)
                     (activity as MainActivity).moveToHome()
                 else
@@ -76,9 +84,22 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
         }
     }
 
+    /**
+     * get Fragment by Flow
+     *
+     * @sample [com.devgunhee.fragment.Flow]
+     */
+    fun getFragment(flow: Flow) = when (flow) {
+        Flow.FlowStartFragment -> { FlowStartFragment() }
+        Flow.FlowFirstFragment -> { FlowFirstFragment() }
+        Flow.FlowSecondFragment -> { FlowSecondFragment() }
+        Flow.FlowThirdFragment -> { FlowThirdFragment() }
+        Flow.FlowFinishFragment -> { FlowFinishFragment() }
+    }
+
     private fun replaceFragment(flow: Flow) {
         childFragmentManager.beginTransaction()
-            .replace(binding.flowFragmentContainer.id, customFragmentFactory.getFragment(flow))
+            .replace(binding.flowFragmentContainer.id, getFragment(flow))
             .addToBackStack(flow.name)
             .commit()
     }
@@ -86,7 +107,7 @@ class FlowFragment(@StringRes private val resId: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.flow)
     }
 
     override fun onDestroyView() {

@@ -11,7 +11,7 @@ import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.R
 import com.devgunhee.fragment.databinding.FragmentFlowFirstBinding
 
-class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
+class FlowFirstFragment : Fragment() {
 
     private var _binding: FragmentFlowFirstBinding? = null
     private val binding get() = _binding!!
@@ -48,7 +48,7 @@ class FlowFirstFragment(@StringRes private val resId: Int) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
-        binding.name.text = getString(resId)
+        binding.name.text = getString(R.string.flow_first)
     }
 
     override fun onDestroyView() {
