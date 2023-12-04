@@ -1,5 +1,6 @@
 package com.devgunhee.fragment.flow
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.devgunhee.fragment.Flow
 import com.devgunhee.fragment.MainActivity
 import com.devgunhee.fragment.R
@@ -24,6 +26,9 @@ import com.devgunhee.fragment.databinding.FragmentFlowBinding
 class FlowFragment : Fragment() {
 
     private var _binding: FragmentFlowBinding? = null
+
+    private lateinit var callback: OnBackPressedCallback
+
     private val binding get() = _binding!!
 //    private val customFragmentFactory : CustomFragmentFactory by lazy {
 //        childFragmentManager.fragmentFactory as CustomFragmentFactory
@@ -51,20 +56,38 @@ class FlowFragment : Fragment() {
                 Log.e(TAG, "FlowFragment >> $i childFragmentManager Backstack ${childFragmentManager.getBackStackEntryAt(i)}")
         }
 
+//        Log.e(TAG, "${savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS)}")
 
-        Log.e(TAG, "${savedInstanceState?.getStringArrayList(CURRENT_FLOW_FRAGMENTS)}")
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                Log.e(TAG, "FlowFragment >> handleOnBackPressed")
-                Log.e(TAG, "FlowFragment >> fragments ${childFragmentManager.fragments}")
-                for(i in 0 until childFragmentManager.backStackEntryCount)
-                Log.e(TAG, "FlowFragment >> $i childFragmentManager Backstack ${childFragmentManager.getBackStackEntryAt(i)}")
-                if (childFragmentManager.backStackEntryCount == 0)
-                    (activity as MainActivity).moveToHome()
-                else
-                    childFragmentManager.popBackStack()
-            }
-        })
+
+        if (viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+            Log.e(TAG, "FlowFragment >> CurrentState is Destorted")
+        } else {
+            Log.e(TAG, "FlowFragment >> CurrentState is not Destorted")
+        }
+
+//        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                Log.e(TAG, "FlowFragment >> handleOnBackPressed")
+//                childFragmentManager.popBackStack()
+////                if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
+////                    finish()
+////                else
+////                    moveToHome()
+//            }
+//        })
+
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                Log.e(TAG, "FlowFragment >> handleOnBackPressed")
+//                Log.e(TAG, "FlowFragment >> fragments ${childFragmentManager.fragments}")
+//                for(i in 0 until childFragmentManager.backStackEntryCount)
+//                Log.e(TAG, "FlowFragment >> $i childFragmentManager Backstack ${childFragmentManager.getBackStackEntryAt(i)}")
+//                if (childFragmentManager.backStackEntryCount == 0)
+//                    (activity as MainActivity).moveToHome()
+//                else
+//                    childFragmentManager.popBackStack()
+//            }
+//        })
 
         binding.button.setOnClickListener {
             replaceFragment(Flow.FlowStartFragment)
