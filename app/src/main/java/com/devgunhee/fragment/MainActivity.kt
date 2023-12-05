@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentManager.BackStackEntry
 import com.devgunhee.fragment.databinding.ActivityMainBinding
 import com.devgunhee.fragment.dual.DualFragment
 import com.devgunhee.fragment.flow.FlowFragment
@@ -22,10 +23,51 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if (savedInstanceState == null) {
+//            if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(binding.fragmentContainer.id, getFragment(Menu.HomeFragment), Menu.HomeFragment.name)
+//                .commit()
+//            supportFragmentManager.beginTransaction()
+//                .setPrimaryNavigationFragment(fragment)
+//                .replace(binding.fragmentContainer.id, fragment, menu.name)
+//                .addToBackStack(menu.name)
+//                .commit()
+//            moveToHome()
+//            }
+        }
+
         binding.menu.setOnClickListener {
             Log.e(TAG, "MainActivity >> fragments ${supportFragmentManager.fragments}")
-            for(i in 0 until supportFragmentManager.backStackEntryCount)
+            for(i in 0 until supportFragmentManager.backStackEntryCount) {
                 Log.e(TAG, "MainActivity >> $i supportFragmentManager Backstack ${supportFragmentManager.getBackStackEntryAt(i)}")
+            }
+
+        }
+
+        //TODO BottomNavigationView popBackStack어떻게 대응하지?
+
+        binding.menu2.setOnClickListener {
+//            Log.e(TAG, "findFragmentByTag >> ${supportFragmentManager.findFragmentByTag(Menu.DualFragment.name)}, ${Menu.DualFragment.name}")
+//
+//            val fr = supportFragmentManager.findFragmentByTag(Menu.HomeFragment.name)
+
+            val backStacks = mutableListOf<BackStackEntry>()
+
+            for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
+            }
+
+            Log.e(TAG, "backStacks >> ${backStacks}")
+
+
+//                    supportFragmentManager.popBack
+
+
+//            supportFragmentManager.beginTransaction()
+//                .remove(getFragment(Menu.HomeFragment))
+//                .re
+//                .commit()
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -42,6 +84,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+        binding.bottomNavigation.selectedItemId = 0
 
         binding.bottomNavigation.setOnItemSelectedListener {
             Log.e(TAG, "Bottom Navigation Selected >> $it")
@@ -68,6 +112,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+//        binding.bottomNavigation.setOnItemReselectedListener {
+//            Log.e(TAG, "Bottom Navigation Reselected >> $it")
+//        }
+
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
             moveToHome()
         }
@@ -78,6 +126,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun fragmentTest(menu: Menu) {
+
+        val backStacks = mutableListOf<BackStackEntry>()
+
+        for (i in 0 until supportFragmentManager.backStackEntryCount) {
+            backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
+        }
+
+
+
+
+
+        //====================================================
 
         // 현재 추가하려는 Fragment랑 보이고있는 Fragment가 같은지 비교
         supportFragmentManager.findFragmentById(binding.fragmentContainer.id)
@@ -104,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         Log.e(TAG, "replaceFragment >> $fragment")
         supportFragmentManager.beginTransaction()
             .setPrimaryNavigationFragment(fragment)
-            .replace(binding.fragmentContainer.id, fragment)
+            .replace(binding.fragmentContainer.id, fragment, menu.name)
             .addToBackStack(menu.name)
             .commit()
     }
