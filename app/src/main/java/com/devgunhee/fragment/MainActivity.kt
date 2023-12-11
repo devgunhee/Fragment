@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.BackStackEntry
+import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.devgunhee.fragment.databinding.ActivityMainBinding
 import com.devgunhee.fragment.dual.DualFragment
 import com.devgunhee.fragment.flow.FlowFragment
@@ -43,6 +46,16 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, "MainActivity >> $i supportFragmentManager Backstack ${supportFragmentManager.getBackStackEntryAt(i)}")
             }
 
+            for(i in 0 until binding.bottomNavigation.menu.size) {
+                Log.e(TAG, "MainActivity >> $i Menu itemId ${binding.bottomNavigation.menu[i].itemId}")
+            }
+//
+//            binding.bottomNavigation.menu.findItem(Menu.FlowFragment.itemId)?.isChecked = true
+
+            replaceFragment(Menu.DualFragment)
+            replaceFragment(Menu.FlowFragment)
+//            binding.bottomNavigation.menu.get(0).itemId
+//            binding.bottomNavigation.menu.getItem(3).isChecked = true
         }
 
         //TODO BottomNavigationView popBackStack어떻게 대응하지?
@@ -58,11 +71,12 @@ class MainActivity : AppCompatActivity() {
                 backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
             }
 
-            Log.e(TAG, "backStacks >> ${backStacks}")
+//            Log.e(TAG, "backStacks >> ${backStacks}")
 
+//            removeFragment(Menu.DualFragment)
+            supportFragmentManager.popBackStack(Menu.DualFragment.name, 0)
 
 //                    supportFragmentManager.popBack
-
 
 //            supportFragmentManager.beginTransaction()
 //                .remove(getFragment(Menu.HomeFragment))
@@ -85,10 +99,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        binding.bottomNavigation.selectedItemId = 0
+//        binding.bottomNavigation.selectedItemId = 0
+
+//        binding.bottomNavigation.menu.getItem(0).isChecked = true
 
         binding.bottomNavigation.setOnItemSelectedListener {
-            Log.e(TAG, "Bottom Navigation Selected >> $it")
+            Log.e(TAG, "Bottom Navigation Selected >> ${it.title}, ${it.itemId}")
             when (it.itemId) {
                 Menu.HomeFragment.itemId -> {
                     replaceFragment(Menu.HomeFragment)
@@ -112,9 +128,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        binding.bottomNavigation.setOnItemReselectedListener {
-//            Log.e(TAG, "Bottom Navigation Reselected >> $it")
-//        }
+        binding.bottomNavigation.setOnItemReselectedListener {
+            Log.e(TAG, "Bottom Navigation Reselected >> $it")
+        }
 
         if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
             moveToHome()
@@ -127,19 +143,17 @@ class MainActivity : AppCompatActivity() {
 
     fun fragmentTest(menu: Menu) {
 
+        //TODO Remove, popstack 활용해서 백스택 관리하는 로직 넣기
+
         val backStacks = mutableListOf<BackStackEntry>()
 
         for (i in 0 until supportFragmentManager.backStackEntryCount) {
             backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
         }
 
-
-
-
-
         //====================================================
 
-        // 현재 추가하려는 Fragment랑 보이고있는 Fragment가 같은지 비교
+        // 현재 추가하려는 Fragment랑 보이고있는 Fragment가 같은지 비교 ==> Reselect로 대응가능?
         supportFragmentManager.findFragmentById(binding.fragmentContainer.id)
 
         // if 추가하려는 Fragment가 Home이면?
@@ -163,10 +177,29 @@ class MainActivity : AppCompatActivity() {
         val fragment = getFragment(menu)
         Log.e(TAG, "replaceFragment >> $fragment")
         supportFragmentManager.beginTransaction()
-            .setPrimaryNavigationFragment(fragment)
+            .setReorderingAllowed(true)
+//            .setPrimaryNavigationFragment(fragment)
             .replace(binding.fragmentContainer.id, fragment, menu.name)
             .addToBackStack(menu.name)
             .commit()
+    }
+
+    private fun removeFragment(menu: Menu) {
+        val fragment = getFragment(menu)
+        Log.e(TAG, "removeFragment >> $fragment")
+//        supportFragmentManager.beginTransaction()
+//            .setReorderingAllowed(true)
+//            .remove()
+//            .commit()
+
+        supportFragmentManager.findFragmentByTag(menu.name)?.let {
+            supportFragmentManager.beginTransaction()
+                .remove(it)
+                .commit()
+        }
+
+            supportFragmentManager.executePendingTransactions()
+
     }
 
     /**
