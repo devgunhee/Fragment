@@ -6,7 +6,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.size
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.BackStackEntry
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -27,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
+            replaceFragment(Menu.HomeFragment)
 //            if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
 //            supportFragmentManager.beginTransaction()
 //                .replace(binding.fragmentContainer.id, getFragment(Menu.HomeFragment), Menu.HomeFragment.name)
@@ -42,18 +42,32 @@ class MainActivity : AppCompatActivity() {
 
         binding.menu.setOnClickListener {
             Log.e(TAG, "MainActivity >> fragments ${supportFragmentManager.fragments}")
-            for(i in 0 until supportFragmentManager.backStackEntryCount) {
-                Log.e(TAG, "MainActivity >> $i supportFragmentManager Backstack ${supportFragmentManager.getBackStackEntryAt(i)}")
+            for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                Log.e(
+                    TAG,
+                    "MainActivity >> $i supportFragmentManager Backstack ${
+                        supportFragmentManager.getBackStackEntryAt(i)
+                    }"
+                )
             }
 
-            for(i in 0 until binding.bottomNavigation.menu.size) {
-                Log.e(TAG, "MainActivity >> $i Menu itemId ${binding.bottomNavigation.menu[i].itemId}")
-            }
+//            for (i in 0 until binding.bottomNavigation.menu.size) {
+//                Log.e(
+//                    TAG,
+//                    "MainActivity >> $i Menu itemId ${binding.bottomNavigation.menu[i].itemId}"
+//                )
+//            }
+
+//            Log.e(
+//                TAG,
+//                "MainActivity >> findFragmentbyTag ${supportFragmentManager.findFragmentByTag(Menu.FlowFragment.name)}"
+//            )
+
 //
 //            binding.bottomNavigation.menu.findItem(Menu.FlowFragment.itemId)?.isChecked = true
 
-            replaceFragment(Menu.DualFragment)
-            replaceFragment(Menu.FlowFragment)
+//            replaceFragment(Menu.DualFragment)
+//            replaceFragment(Menu.FlowFragment)
 //            binding.bottomNavigation.menu.get(0).itemId
 //            binding.bottomNavigation.menu.getItem(3).isChecked = true
         }
@@ -74,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 //            Log.e(TAG, "backStacks >> ${backStacks}")
 
 //            removeFragment(Menu.DualFragment)
-            supportFragmentManager.popBackStack(Menu.DualFragment.name, 0)
+            supportFragmentManager.popBackStack(Menu.DualFragment.name, POP_BACK_STACK_INCLUSIVE)
 
 //                    supportFragmentManager.popBack
 
@@ -107,17 +121,20 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Bottom Navigation Selected >> ${it.title}, ${it.itemId}")
             when (it.itemId) {
                 Menu.HomeFragment.itemId -> {
-                    replaceFragment(Menu.HomeFragment)
+                    fragmentTest(Menu.HomeFragment)
+//                    replaceFragment(Menu.HomeFragment)
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.DualFragment.itemId -> {
-                    replaceFragment(Menu.DualFragment)
+                    fragmentTest(Menu.DualFragment)
+//                    replaceFragment(Menu.DualFragment)
                     return@setOnItemSelectedListener true
                 }
 
                 Menu.FlowFragment.itemId -> {
-                    replaceFragment(Menu.FlowFragment)
+                    fragmentTest(Menu.FlowFragment)
+//                    replaceFragment(Menu.FlowFragment)
                     return@setOnItemSelectedListener true
                 }
 
@@ -132,9 +149,9 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Bottom Navigation Reselected >> $it")
         }
 
-        if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
-            moveToHome()
-        }
+//        if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+//            moveToHome()
+//        }
     }
 
     fun moveToHome() {
@@ -151,25 +168,73 @@ class MainActivity : AppCompatActivity() {
             backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
         }
 
-        //====================================================
+        Log.e(TAG, "[Test 1] >> $backStacks")
 
-        // 현재 추가하려는 Fragment랑 보이고있는 Fragment가 같은지 비교 ==> Reselect로 대응가능?
-        supportFragmentManager.findFragmentById(binding.fragmentContainer.id)
+        val homeFilteredList = backStacks.filterIndexed { index, backStackEntry ->
+            index != 0 || backStackEntry.name != Menu.HomeFragment.name
+        }
 
-        // if 추가하려는 Fragment가 Home이면?
-        supportFragmentManager.popBackStack(Menu.HomeFragment.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        Log.e(TAG, "[Test 2] >> $homeFilteredList")
 
-        // else
-            supportFragmentManager.findFragmentByTag(menu.name)
+        homeFilteredList
+            .find { it.name == menu.name }
+            ?.run {
+                // 디버깅용
+                supportFragmentManager.popBackStackImmediate(menu.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                supportFragmentManager.popBackStack(menu.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+                val backStacks2 = mutableListOf<BackStackEntry>()
+                for (i in 0 until supportFragmentManager.backStackEntryCount) {
+                    backStacks2.add(supportFragmentManager.getBackStackEntryAt(i))
+                }
+
+                Log.e(TAG, "[Test 3] >> $backStacks2")
+
+                val homeFilteredFirst = homeFilteredList[0]
+
+                homeFilteredList
+                    .filterIndexed { index, _ -> index > homeFilteredList.indexOf(this) }
+                    .forEachIndexed { index, backStackEntry ->
+                        if (!((homeFilteredList[0].name == menu.name) && (index == 0 && backStackEntry.name == Menu.HomeFragment.name))) {
+                            replaceFragment(Menu.valueOf(backStackEntry.name!!))
+                        }
+                    }
+            }
+
+        replaceFragment(menu)
+
+        val backStacks3 = mutableListOf<BackStackEntry>()
+        for (i in 0 until supportFragmentManager.backStackEntryCount) {
+            backStacks3.add(supportFragmentManager.getBackStackEntryAt(i))
+        }
+
+        Log.e(TAG, "[Test 4] >> $backStacks3")
+
+//
+//        homeFilteredList.indexOfFirst { true }
+//        val leftOverList =
+//
+//        //====================================================
+//
+//            // 현재 추가하려는 Fragment랑 보이고있는 Fragment가 같은지 비교 ==> Reselect로 대응가능?
+//            supportFragmentManager.findFragmentById(binding.fragmentContainer.id)
+//
+//        // if 추가하려는 Fragment가 Home이면?
+//        supportFragmentManager.popBackStack(
+//            Menu.HomeFragment.name,
+//            FragmentManager.POP_BACK_STACK_INCLUSIVE
+//        )
+//
+//        // else
+//        supportFragmentManager.findFragmentByTag(menu.name)
+//
+//
+//        // 해당 Fragment 이미 있으면? pop하고 다시 넣기
+//        supportFragmentManager.popBackStackImmediate(menu.name, 0)
+//        //TODO 백스택에서 특정 백스택만 Pop하는 방법 없나? 특정 백스택 위의 모든 백스택이 다 제거 됨
 
 
-            // 해당 Fragment 이미 있으면? pop하고 다시 넣기
-            supportFragmentManager.popBackStackImmediate(menu.name, 0)
-            //TODO 백스택에서 특정 백스택만 Pop하는 방법 없나? 특정 백스택 위의 모든 백스택이 다 제거 됨
-
-
-            // 아니면 그냥 넣기
-
+        // 아니면 그냥 넣기
     }
 
 
@@ -198,7 +263,8 @@ class MainActivity : AppCompatActivity() {
                 .commit()
         }
 
-            supportFragmentManager.executePendingTransactions()
+        supportFragmentManager.executePendingTransactions()
+
 
     }
 
@@ -208,9 +274,17 @@ class MainActivity : AppCompatActivity() {
      * @sample [com.devgunhee.fragment.Menu]
      */
     fun getFragment(menu: Menu) = when (menu) {
-        Menu.HomeFragment -> { HomeFragment() }
-        Menu.DualFragment -> { DualFragment() }
-        Menu.FlowFragment -> { FlowFragment() }
+        Menu.HomeFragment -> {
+            HomeFragment()
+        }
+
+        Menu.DualFragment -> {
+            DualFragment()
+        }
+
+        Menu.FlowFragment -> {
+            FlowFragment()
+        }
     }
 
     companion object {
