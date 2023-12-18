@@ -2,6 +2,7 @@ package com.devgunhee.fragment
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -13,6 +14,7 @@ import com.devgunhee.fragment.databinding.ActivityMainBinding
 import com.devgunhee.fragment.dual.DualFragment
 import com.devgunhee.fragment.flow.FlowFragment
 import com.devgunhee.fragment.home.HomeFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -101,10 +103,12 @@ class MainActivity : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 Log.e(TAG, "MainActivity >> handleOnBackPressed")
-                if (supportFragmentManager.findFragmentById(R.id.fragment_container) == null) {
+                if (supportFragmentManager.backStackEntryCount == 1) {
                     finish()
                 } else {
-                    supportFragmentManager.popBackStack()
+                    supportFragmentManager.popBackStackImmediate()
+                    updateMenuSelection()
+
 //                if (supportFragmentManager.findFragmentById(binding.fragmentContainer.id) is HomeFragment)
 //                    finish()
 //                else
@@ -162,14 +166,11 @@ class MainActivity : AppCompatActivity() {
 
         //TODO Remove, popstack 활용해서 백스택 관리하는 로직 넣기
 
-        val backStacks = mutableListOf<BackStackEntry>()
-
-        for (i in 0 until supportFragmentManager.backStackEntryCount) {
-            backStacks.add(supportFragmentManager.getBackStackEntryAt(i))
-        }
+        val backStacks = supportFragmentManager.backStackEntries()
 
         Log.e(TAG, "[Test 1] >> $backStacks")
 
+        //TODO filterNot으로
         val homeFilteredList = backStacks.filterIndexed { index, backStackEntry ->
             index != 0 || backStackEntry.name != Menu.HomeFragment.name
         }
@@ -180,8 +181,11 @@ class MainActivity : AppCompatActivity() {
             .find { it.name == menu.name }
             ?.run {
                 // 디버깅용
-                supportFragmentManager.popBackStackImmediate(menu.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                supportFragmentManager.popBackStack(menu.name, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//                supportFragmentManager.popBackStackImmediate(
+//                    menu.name,
+//                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+//                )
+                supportFragmentManager.popBackStack(menu.name, POP_BACK_STACK_INCLUSIVE)
 
                 val backStacks2 = mutableListOf<BackStackEntry>()
                 for (i in 0 until supportFragmentManager.backStackEntryCount) {
@@ -285,6 +289,33 @@ class MainActivity : AppCompatActivity() {
         Menu.FlowFragment -> {
             FlowFragment()
         }
+    }
+
+    private fun FragmentManager.backStackEntries(): List<BackStackEntry> {
+        val backStacks = mutableListOf<BackStackEntry>()
+        for (index in 0 until backStackEntryCount) {
+            backStacks.add(getBackStackEntryAt(index))
+        }
+
+        return backStacks
+    }
+
+    private fun updateMenuSelection() =
+        supportFragmentManager.findFragmentById(binding.fragmentContainer.id)?.tag?.let { tag ->
+            binding.bottomNavigation.selectMenuByItemId(Menu.valueOf(tag).itemId)
+        }
+
+    private fun BottomNavigationView.selectMenuByItemId(itemId: Int) {
+        menuItems().find { menuItem -> menuItem.itemId == itemId }?.isChecked = true
+    }
+
+    private fun BottomNavigationView.menuItems(): List<MenuItem> {
+        val menus = mutableListOf<MenuItem>()
+        for (index in 0 until menu.size) {
+            menus.add(menu[index])
+        }
+
+        return menus
     }
 
     companion object {
